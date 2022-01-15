@@ -1,5 +1,5 @@
 ## Tic Tac Py Game
-## Jan 13 2022
+## Jan 2022
 ## KGP
 
 """
@@ -14,6 +14,9 @@
 5) check if user won: check rows, columns, and diagonals
 6) toggle between users and successful moves
 """
+
+import numpy as np
+import random as rando
 
 board = [
     [ "-", "-", "-" ],
@@ -46,7 +49,7 @@ def check_input(user_input):
 
 def isnumber(user_input):
     if not user_input.isnumeric():
-        print("this is not valid number")
+        print("this is not valid position")
         return False
     else:
         return True
@@ -71,10 +74,28 @@ def coordinates(user_input):
     if col > 2: col = int(col % 3)
     return (row, col)
 
-def addToBoard(coords, board, active_user):
+def addToBoard(coords, board, player):
     row = coords[0]
     col = coords[1]
-    board[row][col] = active_user
+    board[row][col] = player
+
+def randomCoords(board, player):
+
+    while True:
+        available = [0,1,2,3,4,5,6,7,8]
+        select = rando.choice(available)
+        randomCoords = coordinates(select)
+        coords = randomCoords
+        row = coords[0]
+        col = coords[1]
+        if board[row][col] != '-':
+            return True      
+        else: break
+
+    row = coords[0]
+    col = coords[1]
+    board[row][col] = player
+
 
 def current_user(user):
     if user : return "x"
@@ -115,7 +136,8 @@ def check_diag(user, board):
     else: return False
 
 while True:
-    active_user = current_user(user)
+    
+    player = current_user(user)
     print_board(board)
     user_input = input("Please enter a number between 1-9 to indicate player move: ")
     if quit(user_input): break
@@ -127,10 +149,14 @@ while True:
     if istaken(coords, board):
         print("Please try again.")
         continue
-    addToBoard(coords, board, active_user)
-    if winner(active_user, board):
-        print(f"\n {active_user.upper()} won! \n")
-
-    
+    addToBoard(coords, board, player)
+    randomCoords(board,'o')
+        
+    if winner(player, board):
+        print(f"\n {player.upper()} is the winner! \n")
+        break
 
     user = not user
+
+   
+        
